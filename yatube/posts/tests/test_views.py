@@ -7,7 +7,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.cache import cache
 from django.urls import reverse
 from django.conf import settings
-from ..models import Follow, Group, Post
+from posts.models import Follow, Group, Post
 
 NUM_POSTS_TEST = settings.NUM_POSTS_PER_PAGE + 3
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
