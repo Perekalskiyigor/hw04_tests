@@ -178,10 +178,9 @@ class PostFormTests(TestCase):
             follow=True
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        redirect = (
-                reverse('users:login')
-                + '?next=' + reverse('posts:edit', args=[post.id])
-        )
+        redirect = (reverse('users:login')
+                    + '?next=' + reverse('posts:edit', args=[post.id])
+                    )
 
         self.assertRedirects(response, redirect)
         self.assertNotEqual(post.text, form_data['text'])
