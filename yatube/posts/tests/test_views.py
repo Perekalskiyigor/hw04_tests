@@ -1,5 +1,6 @@
 import shutil
 import tempfile
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase, override_settings
@@ -7,7 +8,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.cache import cache
 from django.urls import reverse
 from django.conf import settings
-from posts.models import Follow, Group, Post
+
+from ..models import Follow, Group, Post
 
 NUM_POSTS_TEST = settings.NUM_POSTS_PER_PAGE + 3
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
@@ -19,11 +21,11 @@ class PostPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = User.objects.create_user(username='Mr Jons')
+        cls.user = User.objects.create_user(username='IvanIvanov')
         cls.group = Group.objects.create(
-            title='Тест группа',
+            title='Тестовая группа',
             slug='test-slug',
-            description='Описание группы',
+            description='Тестовое описание группы',
         )
         small_gif = (
             b'\x47\x49\x46\x38\x39\x61\x02\x00'
@@ -40,7 +42,7 @@ class PostPagesTests(TestCase):
         )
 
         cls.post = Post.objects.create(
-            text='Но здесь ситуация совсем другая, сейчас большинство...',
+            text='Начинаю новую тетрадь дневника, послѣ почти мѣсячнаго...',
             author=cls.user,
             group=cls.group,
             image=uploaded,
@@ -133,9 +135,9 @@ class PaginatorViewsTest(TestCase):
             username='auth',
         )
         cls.group = Group.objects.create(
-            title='Тест название группы',
+            title='Тестовое название группы',
             slug='test-slug',
-            description='Тест описание группы',
+            description='Тестовое описание группы',
         )
         for i in range(NUM_POSTS_TEST):
             Post.objects.create(
@@ -174,10 +176,10 @@ class FollowViewsTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.post_autor = User.objects.create(username='Mr Jons')
-        cls.post_follower = User.objects.create(username='Mikle Mires')
+        cls.post_autor = User.objects.create(username='IvanIvanov')
+        cls.post_follower = User.objects.create(username='PetrPetrov')
         cls.post = Post.objects.create(
-            text='Тест текст проверяем подписку',
+            text='Тестовый текст проверяем подписку',
             author=cls.post_autor,
         )
 
@@ -206,7 +208,7 @@ class FollowViewsTest(TestCase):
         """Валидация записей у тех, кто подписан."""
         post = Post.objects.create(
             author=self.post_autor,
-            text="Тест текст проверяем подписку"
+            text="Тестовый текст проверяем подписку"
         )
         Follow.objects.create(
             user=self.post_follower,
@@ -236,7 +238,7 @@ class FollowViewsTest(TestCase):
         """Валидация записей у тех, кто не подписан."""
         post = Post.objects.create(
             author=self.post_autor,
-            text="Тест текст проверяем отписку"
+            text="Тестовый текст проверяем отписку"
         )
         response = self.author_client.get(
             reverse('posts:follow_index')

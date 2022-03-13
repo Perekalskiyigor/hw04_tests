@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from posts.models import Group, Post
+
+from ..models import Group, Post
+
 User = get_user_model()
 
 
@@ -11,7 +13,7 @@ class PostModelTest(TestCase):
         cls.user = User.objects.create_user(username='auth')
         cls.post = Post.objects.create(
             author=cls.user,
-            text='Но здесь ситуация совсем другая, сейчас большинство',
+            text='Начинаю новую тетрадь дневника, послѣ почти мѣсячнаго..',
         )
 
     def test_post_have_correct_object_name(self):
@@ -62,9 +64,9 @@ class GroupModelTest(TestCase):
         super().setUpClass()
         cls.user = User.objects.create_user(username='auth')
         cls.group = Group.objects.create(
-            title='Яндекс-мученики',
-            slug='Слаг тест',
-            description='Всякая всячина',
+            title='Тестовая группа',
+            slug='Тестовый слаг',
+            description='Тестовое описание',
         )
 
     def test_group_have_correct_object_name(self):
@@ -72,14 +74,14 @@ class GroupModelTest(TestCase):
         self.assertEqual(
             self.group.title,
             str(self.group),
-            '__str__ работает неправильно.'
+            'Метод __str__ работает неправильно.'
         )
 
     def test_post_verbose_name(self):
         """Проверка verbose_name у group."""
         field_verboses = {
             'title': 'Заголовок',
-            'slug': 'SSI',
+            'slug': 'ЧПУ',
             'description': 'Описание',
         }
 
@@ -89,5 +91,5 @@ class GroupModelTest(TestCase):
                 self.assertEqual(
                     verbose_name,
                     expected_value,
-                    'неверное verbose_name у group'
+                    'Неправильное значение verbose_name у group'
                 )

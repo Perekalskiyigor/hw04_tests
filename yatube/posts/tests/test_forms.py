@@ -1,13 +1,14 @@
 import shutil
 import tempfile
 from http import HTTPStatus
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
-from . models import Comment, Group, Post
+from ..models import Comment, Group, Post
 
 User = get_user_model()
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
@@ -18,12 +19,12 @@ class PostFormTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_author = User.objects.create_user(username='Mr Jons')
-        cls.another_user = User.objects.create_user(username='Mike Mires')
+        cls.user_author = User.objects.create_user(username='IvanIvanov')
+        cls.another_user = User.objects.create_user(username='PetrPetrov')
         cls.group = Group.objects.create(
-            title='Тест название группы',
+            title='Тестовое название группы',
             slug='test-slug',
-            description='Тест описание группы',
+            description='Тестовое описание группы',
         )
 
     @classmethod
@@ -55,7 +56,7 @@ class PostFormTests(TestCase):
             content_type='image/gif'
         )
         form_data = {
-            'text': 'Но здесь ситуация совсем другая, сейчас большинство...',
+            'text': 'Начинаю новую тетрадь дневника, послѣ почти мѣсячнаго...',
             'group': self.group.id,
             'image': uploaded,
         }
@@ -80,7 +81,7 @@ class PostFormTests(TestCase):
     def test_post_author_edit_post(self):
         """Проверка редактирования поста его автором."""
         post = Post.objects.create(
-            text='текст, который мы вставим',
+            text='Какой-то текст, который мы вставим',
             author=self.user_author,
             group=self.group,
         )
@@ -129,7 +130,7 @@ class PostFormTests(TestCase):
     def test_authorized_user_edit_post(self):
         """Проверка редактирования поста авторизованным пользователем."""
         post = Post.objects.create(
-            text='текст, который мы вставим',
+            text='Какой-то текст, который мы вставим',
             author=self.user_author,
             group=self.group,
         )
@@ -160,7 +161,7 @@ class PostFormTests(TestCase):
     def test_nonauthorized_user_create_post(self):
         """Проверка редактирования поста не авторизованным пользователем."""
         post = Post.objects.create(
-            text='текст, который мы вставим',
+            text='Какой-то текст, который мы вставим',
             author=self.user_author,
             group=self.group,
         )
@@ -177,8 +178,10 @@ class PostFormTests(TestCase):
             follow=True
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        redirect = (reverse('users:login')
-                    + '?next=' + reverse('posts:edit', args=[post.id]))
+        redirect = (
+                reverse('users:login')
+                + '?next=' + reverse('posts:edit', args=[post.id])
+        )
 
         self.assertRedirects(response, redirect)
         self.assertNotEqual(post.text, form_data['text'])
@@ -188,9 +191,9 @@ class PostFormTests(TestCase):
         """Проверка создания комментария авторизованным клиентом."""
         comments_count = Comment.objects.count()
         post = Post.objects.create(
-            text='текст, который  вставим для проверки',
+            text='Какой-то текст, который мы вставим для проверки',
             author=self.user_author)
-        form_data = {'text': ' тестовый комментарий'}
+        form_data = {'text': 'Какой-то тестовый комментарий'}
         response = self.authorized_user.post(
             reverse(
                 'posts:add_comment',
@@ -209,9 +212,9 @@ class PostFormTests(TestCase):
         """Проверка создания комментария не авторизованным пользователем."""
         comments_count = Comment.objects.count()
         post = Post.objects.create(
-            text='текст который  вставим для проверки',
+            text='Какой-то текст, который мы вставим для проверки',
             author=self.user_author)
-        form_data = {'text': ' тестовый комментарий'}
+        form_data = {'text': 'Какой-то тестовый комментарий'}
         response = self.guest_user.post(
             reverse(
                 'posts:add_comment',

@@ -1,9 +1,12 @@
 from http import HTTPStatus
+
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.test import Client, TestCase
 from django.urls import reverse
-from posts.models import Group, Post
+
+from ..models import Group, Post
+
 User = get_user_model()
 
 
@@ -12,16 +15,16 @@ class StaticURLTests(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.group = Group.objects.create(
-            title='Яндекс-мученики',
+            title='Тестовое название группы',
             slug='test-slug',
-            description='Всякая всячина',
+            description='Тестовое описание группы',
         )
 
         cls.user_author = User.objects.create_user(username='IvanIvanov')
         cls.another_user = User.objects.create_user(username='PetrPetrov')
 
         cls.post = Post.objects.create(
-            text='Но здесь ситуация совсем другая, сейчас большинство...',
+            text='Начинаю новую тетрадь дневника, послѣ почти мѣсячнаго...',
             author=cls.user_author,
             group=cls.group,
         )
@@ -44,6 +47,7 @@ class StaticURLTests(TestCase):
             f'/posts/{self.post.id}/': status,
             '/unexisting_page/': HTTPStatus.NOT_FOUND,
         }
+
         for url, response_code in url_status_code.items():
             with self.subTest(url=url):
                 status_code = self.unauthorized_user.get(url).status_code
