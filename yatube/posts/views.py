@@ -5,6 +5,7 @@ from django.views.decorators.cache import cache_page
 from .forms import CommentForm, PostForm
 from .models import Follow, Group, Post, User
 from .utils import get_page_paginator
+from django.core.paginator import Paginator
 
 
 @cache_page(20)
@@ -12,7 +13,10 @@ def index(request):
     template = 'posts/index.html'
     title = 'Последние обновления на сайте'
     posts = Post.objects.select_related('group').all()
-    page_obj = get_page_paginator(request, posts)
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    # page_obj = get_page_paginator(request, posts)
 
     context = {
         'title': title,
@@ -27,7 +31,10 @@ def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     title = f'Записи сообщества {group.title}'
     posts = group.posts.all()
-    page_obj = get_page_paginator(request, posts)
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    # page_obj = get_page_paginator(request, posts)
 
     context = {
         'title': title,
@@ -45,8 +52,11 @@ def profile(request, username):
     ).filter(
         author=author
     )
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     posts_count = posts.count()
-    page_obj = get_page_paginator(request, posts)
+    # page_obj = get_page_paginator(request, posts)
     full_name = author.get_full_name()
     title = f'Профайл пользователя {full_name}'
     following = request.user.is_authenticated
