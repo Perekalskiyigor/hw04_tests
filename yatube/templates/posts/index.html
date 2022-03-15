@@ -3,6 +3,8 @@
   {{ title }}
 {% endblock %}
 {% block content %}
+    {% for post in page_obj %}
+    {% endfor%}
   {% include 'posts/includes/switcher.html' with index=True %}
   <h1>Последние обновления на сайте</h1>
   {% include 'includes/post.html' %}
