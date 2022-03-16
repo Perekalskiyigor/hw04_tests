@@ -8,7 +8,7 @@ from .utils import get_page_paginator
 from django.core.paginator import Paginator
 
 
-@cache_page(20)
+# @cache_page(20)
 def index(request):
     template = 'posts/index.html'
     title = 'Последние обновления на сайте'
