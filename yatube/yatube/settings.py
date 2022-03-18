@@ -136,6 +136,7 @@ NUM_POSTS_PER_PAGE = 10
 
 DATE_FORMAT = 'd E Y'
 
+# Имя view-функции, обрабатывающей ошибку 403, указывается в settings.py, в константе
 CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
 
 MEDIA_URL = '/media/'

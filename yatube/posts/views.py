@@ -13,11 +13,9 @@ def index(request):
     template = 'posts/index.html'
     title = 'Последние обновления на сайте'
     posts = Post.objects.select_related('group').all()
-    print(f"************{posts}")
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    print(f"/////////////////{page_obj}")
     # page_obj = get_page_paginator(request, posts)
 
     context = {
