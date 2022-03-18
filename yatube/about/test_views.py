@@ -1,5 +1,10 @@
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.urls import reverse
+
+
+class StaticURLTests(TestCase):
+    def setUp(self):
+        self.user_guest = Client()
 
 
 class StaticURLTests(TestCase):
